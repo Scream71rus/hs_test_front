@@ -1,0 +1,15 @@
+hs_test:
+  build: .
+  dockerfile: Dockerfile
+  links:
+    - db
+  ports:
+    - "3000:3000"
+  environment:
+    dbhost: db
+    env: "prod"
+    dbuser: "hs_test"
+    dbname: "hs_test"
+    dbpassword: "hs_test"
+
+    PGPASSWORD: "hs_test"
