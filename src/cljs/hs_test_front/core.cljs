@@ -6,8 +6,7 @@
    [hs-test-front.views :as views]
    [hs-test-front.config :as config]
    [re-frisk.core :as re-frisk]
-   [day8.re-frame.http-fx]
-   ))
+   [day8.re-frame.http-fx]))
 
 (re-frisk/enable)
 

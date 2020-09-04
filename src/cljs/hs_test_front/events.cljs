@@ -2,8 +2,9 @@
   (:require
     [re-frame.core :as rf]
     [ajax.core :refer [json-request-format json-response-format]]
-    [hs-test-front.db :as db]
-    ))
+    [hs-test-front.db :as db]))
+
+(def url "http://localhost:3000")
 
 (rf/reg-event-db
   ::initialize-db
@@ -15,11 +16,9 @@
   (fn [{:keys [db]}]
     {:db         (assoc-in db [:patients :loading?] true)
      :http-xhrio {:method          :get
-                  :uri             "http://localhost:3000/patient"
+                  :uri             (str url "/patient")
                   :response-format (json-response-format {:keywords? true})
-                  :on-success      [::patients-loaded]
-                  ;:on-failure      [::patients-loaded]
-                  }}))
+                  :on-success      [::patients-loaded]}}))
 
 (rf/reg-event-db
   ::patients-loaded
@@ -34,12 +33,10 @@
     {:db         (assoc-in db [:patients :editing?] true)
      :http-xhrio {:method          :put
                   :params          patient
-                  :uri             (str "http://localhost:3000/patient/" (:id patient))
+                  :uri             (str url "/patient/" (:id patient))
                   :format          (json-request-format)
                   :response-format (json-response-format {:keywords? true})
-                  :on-success      [::get-patients]
-                  ;:on-failure      [::patients-loaded]
-                  }}))
+                  :on-success      [::get-patients]}}))
 
 (rf/reg-event-fx
   ::create-patient
@@ -47,20 +44,16 @@
     {:db         (assoc-in db [:patients :creating?] true)
      :http-xhrio {:method          :post
                   :params          patient
-                  :uri             "http://localhost:3000/patient"
+                  :uri             (str url "/patient")
                   :format          (json-request-format)
                   :response-format (json-response-format {:keywords? true})
-                  :on-success      [::get-patients]
-                  ;:on-failure      [::patients-loaded]
-                  }}))
+                  :on-success      [::get-patients]}}))
 
 (rf/reg-event-fx
   ::delete-patient
   (fn [{:keys [db]} [_ patient-id]]
     {:http-xhrio {:method          :delete
-                  :uri             (str "http://localhost:3000/patient/" patient-id)
+                  :uri             (str url "/patient/" patient-id)
                   :format          (json-request-format)
                   :response-format (json-response-format {:keywords? true})
-                  :on-success      [::get-patients]
-                  ;:on-failure      [::patients-loaded]
-                  }}))
+                  :on-success      [::get-patients]}}))

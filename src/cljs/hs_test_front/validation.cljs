@@ -1,14 +1,12 @@
 (ns hs-test-front.validation
   (:require
-    [cljs.spec.alpha :as s]
-    ))
+    [cljs.spec.alpha :as s]))
 
 (defn validate [data scheme validate-map]
   (->> (s/explain-data scheme data)
        :cljs.spec.alpha/problems
        (map #(get-in % [:path 0]))
-       (select-keys validate-map)
-       ))
+       (select-keys validate-map)))
 
 (s/def ::first_name (s/and string? #(< 0 (count %))))
 (s/def ::last_name (s/and string? #(< 0 (count %))))

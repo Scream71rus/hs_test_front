@@ -6,8 +6,7 @@
     [hs-test-front.validation :as validation]
     [reagent.core :as r]
     [clojure.string :as str]
-    [cljs-time.format :refer [formatters formatter parse unparse]]
-    ))
+    [cljs-time.format :refer [formatters formatter parse unparse]]))
 
 (defn format-date [d]
   (unparse (:date formatters) (parse (:date-time-no-ms formatters) d)))
@@ -56,8 +55,7 @@
                                    (do
                                      (if (:id patient) (rf/dispatch [::events/edit-patient patient]) (rf/dispatch [::events/create-patient patient]))
                                      (close))
-                                   (js/console.log @errors))
-                                 )}
+                                   (js/console.log @errors)))}
 
              (map (fn [el] [input pat el errors]) [[:first_name "First name"] [:middle_name "Middle name"] [:last_name "Last name"]
                                                    [:birthday "Birthday"] [:address "Address"] [:medical_insurance "Medical_insurance"]
@@ -67,9 +65,7 @@
               [:button.btn.btn-danger
                {:data-dismiss "modal", :type "button" :on-click close}
                "Close"]
-              [:button.btn.btn-dark {:type "submit"} "Save changes"]]
-
-             ]]]]]))))
+              [:button.btn.btn-dark {:type "submit"} "Save changes"]]]]]]]))))
 
 (defn main-panel []
   (rf/dispatch [::events/get-patients])
@@ -122,5 +118,4 @@
                                                                      (reset! editable-patient (update patient :birthday format-date)))} "Edit"]
                                   [:button.btn.btn-dark {:on-click #(rf/dispatch [::events/delete-patient (:id patient)])
                                                          :style    {:margin-left "5%"}} "Delete"]]]))
-                 doall)]]]]))
-    ))
+                 doall)]]]]))))
