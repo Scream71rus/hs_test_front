@@ -1,13 +1,21 @@
 FROM clojure
 
-RUN apt-get update && apt-get upgrade && \
-    apt-get install postgresql postgresql-contrib -y
+RUN apt-get update && apt-get upgrade
 
-RUN mkdir -p /usr/src/app
+RUN apt-get install curl  -y
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN apt-get install nodejs -y
+
 WORKDIR /usr/src/app
-COPY project.clj /usr/src/app/
-RUN lein deps
 COPY . /usr/src/app
 
-RUN chmod +x ./docker-entrypoint.sh
-ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
+RUN lein clean
+RUN lein release
+
+
+FROM nginx
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=0 /usr/src/app/resources/public /usr/src/app/resources/public
